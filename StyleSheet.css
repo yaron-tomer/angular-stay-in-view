@@ -5,9 +5,13 @@
 .search {
     padding-left: 20px;
     padding-top: 100px;
+
 }
 
-.search-header {
+.search-fixed {
     position:fixed;
     top:0px;
+    background-color:grey;
+    padding-top:0px;
+    width:100%;
 }
