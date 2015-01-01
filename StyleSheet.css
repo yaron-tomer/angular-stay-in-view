@@ -1,0 +1,13 @@
+﻿body {
+    height:2000px;
+}
+
+.search {
+    padding-left: 20px;
+    padding-top: 100px;
+}
+
+.search-header {
+    position:fixed;
+    top:0px;
+}
