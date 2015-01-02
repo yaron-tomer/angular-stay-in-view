@@ -1,5 +1,5 @@
 ﻿/// <reference path="angular.js" />
-module = angular.module("searchy", []);
+module = angular.module("AlwaysVisible", []);
 
 module.factory("uidFactory", [function () {
     var uid = 0;
@@ -12,7 +12,7 @@ module.factory("uidFactory", [function () {
 }]);
 
 
-module.directive("dynamicSearch", ["uidFactory", function (uidFactory) {
+module.directive("alwaysVisible", ["uidFactory", function (uidFactory) {
     var myUidFactory = uidFactory;
     return{
         scope:true,
