@@ -13,14 +13,12 @@ module.factory("uidFactory", [function () {
 
 
 module.directive("alwaysVisible", ["uidFactory", function (uidFactory) {
-    var myUidFactory = uidFactory;
     return{
         scope:true,
-        link: function (scope, element, attrs) {
-            
+        link: function (scope, element, attrs) {          
             var elementTop = undefined;
             var elementHeight = undefined;
-            scope.placeholderId = "Sticky" + myUidFactory.create();
+            scope.placeholderId = "__AlwaysVisible" + uidFactory.create();
 
             //append a placeholder
             element.after("<div id=" + scope.placeholderId + "></div> ");
