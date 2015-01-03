@@ -1,5 +1,5 @@
 ﻿/// <reference path="angular.js" />
-module = angular.module("AlwaysVisible", []);
+module = angular.module("StayInView", []);
 
 module.factory("uidFactory", [function () {
     var uid = 0;
@@ -12,13 +12,17 @@ module.factory("uidFactory", [function () {
 }]);
 
 
-module.directive("alwaysVisible", ["uidFactory", function (uidFactory) {
+module.directive("stayInView", ["uidFactory", function (uidFactory) {
     return{
         scope:true,
         link: function (scope, element, attrs) {          
             var elementTop = undefined;
             var elementHeight = undefined;
-            scope.placeholderId = "__AlwaysVisible" + uidFactory.create();
+            var stayClass = attrs.stayInView;
+            if (stayClass === "") {
+                stayClass = "stayInViewDefaultClass";
+            }
+            scope.placeholderId = "__StayInView__" + uidFactory.create();
 
             //append a placeholder
             element.after("<div id=" + scope.placeholderId + "></div> ");
@@ -33,11 +37,11 @@ module.directive("alwaysVisible", ["uidFactory", function (uidFactory) {
                 var scrollTop =  $(window).scrollTop();
                 console.log("scrolled: " + scrollTop + "   element:" + elementTop);
                 if (elementTop <= scrollTop) {
-                    element.addClass("search-fixed");
+                    element.addClass(stayClass);
                     $("#" + scope.placeholderId).css("padding-top", elementHeight);
                 }
                 else {
-                    element.removeClass("search-fixed");
+                    element.removeClass(stayClass);
                     $("#" + scope.placeholderId).css("padding-top", "0px");
                 }
                 
