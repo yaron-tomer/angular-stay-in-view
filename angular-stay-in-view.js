@@ -1,6 +1,7 @@
 ﻿
 module = angular.module("StayInView", []);
 
+//this factory is used to generate unique ids 
 module.factory("uidFactory", [function () {
     var uid = 0;
     var uidFactory = {};
@@ -12,45 +13,39 @@ module.factory("uidFactory", [function () {
 }]);
 
 
-module.directive("stayInView", ["uidFactory", function (uidFactory) {
+module.directive("stayInView", ["uidFactory",  function (uidFactory) {
     return{
-        scope:true,
         link: function (scope, element, attrs) {          
-            var elementTop = undefined;
-            var elementHeight = undefined;
-            var stayClass = attrs.stayInView;
+            var elementTop = undefined; //dimension used to calculate location of element from top of page, so it can be calculated when it is scrolled out of view
+            var elementHeight = undefined;  //dimension used to know the height of the element, so that we can set the placeholder div to its height and prevent a jitter in the scroll
+            var stayClass = attrs.stayInView;   //defines the class used when scrolling out of view
             if (stayClass === "") {
                 stayClass = "stayInViewDefaultClass";
             }
-            scope.placeholderId = "__StayInView__" + uidFactory.create();
 
             //append a placeholder
-            element.after("<div id=" + scope.placeholderId + "></div> ");
+            var placeholderId = "__StayInView__" + uidFactory.create();   //a unique id for the placeholder 
+            element.after("<div id=" + placeholderId + "></div> ");
 
             
             //on scroll event
             $(window).on("scroll", function () {
-                if (elementTop == undefined) {
+                if (elementTop == undefined) {  //calculate element location and height
                     elementTop = element.offset().top;
                     elementHeight = element.outerHeight();
                 }
                 var scrollTop =  $(window).scrollTop();
-                console.log("scrolled: " + scrollTop + "   element:" + elementTop);
-                if (elementTop <= scrollTop) {
+                if (elementTop <= scrollTop) {  //if scrolled out of view
                     element.addClass(stayClass);
-                    $("#" + scope.placeholderId).css("padding-top", elementHeight);
+                    $("#" + placeholderId).css("padding-top", elementHeight);
                 }
-                else {
+                else {  //if scrolled back in view
                     element.removeClass(stayClass);
-                    $("#" + scope.placeholderId).css("padding-top", "0px");
+                    $("#" + placeholderId).css("padding-top", "0px");
                 }
                 
-            });
+            }); // on scroll
 
-
-            element.on("mousedown", function () {
-                console.log("mousedown");
-            });
         } //link
 
     };
