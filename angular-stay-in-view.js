@@ -1,4 +1,4 @@
-﻿/// <reference path="angular.js" />
+﻿
 module = angular.module("StayInView", []);
 
 module.factory("uidFactory", [function () {
