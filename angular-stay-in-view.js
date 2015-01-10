@@ -6,12 +6,19 @@ module.factory("stayInView.Factory", [function () {
     var uid = 0;
     var factory = {};
     var order = [];
+    var totalStayHeight = 0;
     factory.createUid = function () {
         uid = uid + 1;
         return uid;
     };
     factory.order = function () {
         return order;
+    }
+
+    factory.totalStayHeight = function (add) {
+        if (add != undefined)
+            totalStayHeight += add;
+        return totalStayHeight;
     }
     return factory;
 }]);
@@ -33,7 +40,7 @@ module.directive("stayInView", ["stayInView.Factory", function (factory) {
             
             //add the placeholder element
             element.after("<div id=" + placeholderId + "></div> ");
-            placeholderElement = $("#" + placeholderId);
+            var placeholderElement = $("#" + placeholderId);
 
             var elementTop; //the element offset from the begining of the document
 
@@ -45,19 +52,25 @@ module.directive("stayInView", ["stayInView.Factory", function (factory) {
                 {
                     //because the offset might change, constantly check its vertical  position relating the document
                     elementTop = element.offset().top;
-                    if (elementTop <= scrollTop) {  //if scrolled out of view
-                        element.addClass(stayClass);
+                    if (elementTop <= scrollTop + factory.totalStayHeight()) {  //if scrolled out of view
                         placeholderElement.css("padding-top", element.outerHeight());
-                        angular.forEach(factory.order(), function (el) {
-                            el.removeClass(el.scope().stayClass);
-                        });
+                        element.addClass(stayClass)
+                            .css("top", factory.totalStayHeight());
+                        //angular.forEach(factory.order(), function (el) {
+                        //    el.removeClass(el.scope().stayClass);
+                        //});
 
+                        factory.totalStayHeight(element.outerHeight());
                         factory.order().push(element);
                         inScope = false;
                     }
 
                 }
-                else {
+                else if (placeholderElement.offset().top - scrollTop + placeholderElement.outerHeight() > factory.totalStayHeight()) {
+                    placeholderElement.css("padding-top", 0);
+                    element.removeClass(stayClass);
+                    factory.totalStayHeight(-element.outerHeight());
+                    inScope = true;
                     //var placeholderTop = placeholderElement.offset().top;
                     //if (placeholderTop > scrollTop) {  //if scrolled back in view
                     //    element.removeClass(stayClass);
